@@ -1,8 +1,7 @@
 
 
-
-#docker build -t chameleon-client .
-#docker run -ti --rm -v ${HOME}/SAGE_project-openrc.sh:/SAGE_project-openrc.sh:ro chameleon-client /bin/bash
+# docker build -t chameleon-client .
+# docker run -ti --rm -v ${HOME}/SAGE_project-openrc.sh:/openrc.sh:ro chameleon-client /bin/bash
 
 
 FROM python:3
@@ -18,3 +17,9 @@ RUN pip install python-openstackclient
 RUN pip install 'python-blazarclient>=1.1.1'
 RUN pip install -e git+https://github.com/ChameleonCloud/python-blazarclient.git@chameleoncloud/stable/rocky#egg=python-blazarclient
 
+COPY *.sh /chameleon/
+
+WORKDIR /chameleon/
+
+# this makes sure the mounted openrc.sh will be sourced (warning: there is no error is the file is missing)
+ENTRYPOINT /bin/bash --rcfile /openrc.sh
