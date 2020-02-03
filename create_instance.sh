@@ -52,11 +52,17 @@ echo "LEASE_NAME: ${LEASE_NAME}"
 #create lease
 set -e
 set -x
-blazar lease-create --physical-reservation min=1,max=1,resource_properties='["=", "$architecture.platform_type", "'${platform_type}'"]',before_end='' \
-  --reservation resource_type=virtual:floatingip,network_id=6189521e-06a0-4c43-b163-16cc11ce675b \
-  ${LEASE_NAME}
 
+#resource_properties='["=", "$gpu.gpu", "True"]'
+blazar lease-create --physical-reservation min=1,max=1,resource_properties='["=", "$gpu.gpu", "True"]',before_end='' \
+  --reservation resource_type=virtual:floatingip,network_id=6189521e-06a0-4c43-b163-16cc11ce675b \
+${LEASE_NAME}
 set +x
+
+
+#blazar lease-create --physical-reservation min=1,max=1,resource_properties='["=", "$architecture.platform_type", "'${platform_type}'"]',before_end='' \
+#  --reservation resource_type=virtual:floatingip,network_id=6189521e-06a0-4c43-b163-16cc11ce675b \
+#  ${LEASE_NAME}
 
 
 sleep 1
