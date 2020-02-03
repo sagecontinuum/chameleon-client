@@ -15,8 +15,38 @@ if [[ -z "${OS_USERNAME}" ]] ; then
 fi
 
 
+
+
+# try to detect available lease name
+
+LEASE_LIST=$(blazar lease-list -f json | jq -r '.[].name')
+
+LEASE_NAME=""
+
+
+for i in {1..100} ; do 
+  TRY_NAME="${OS_USERNAME}_${i}"
+  #echo "trying ${TRY_NAME}"
+  for LEASE_X in ${LEASE_LIST} ; do
+    if [[ ${LEASE_X}_ == ${TRY_NAME}_ ]] ; then
+        #echo "${TRY_NAME} already used (${LEASE_X})"
+        continue 2
+    fi
+  done
+  #echo "${TRY_NAME} seems available"
+  LEASE_NAME=${TRY_NAME}
+  break
+done
+
+
+echo "LEASE_NAME: ${LEASE_NAME}"
+
+
+
+
+
 # TODO find new lease name
-LEASE_NAME="${OS_USERNAME}_1"
+
 
 
 #create lease
