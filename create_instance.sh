@@ -95,7 +95,7 @@ set +x
 
 
 echo "Try to log into your instance: (please use correct path to you ssh key)"
-echo "ssh -i ~/.ssh/${KEY_NAME}.pem cc@${FLOATING_IP_ID}"
+echo "ssh -i ~/.ssh/${KEY_NAME}.pem cc@${FLOATING_IP}"
 echo ""
 echo "For clean-up use: blazar lease-delete ${LEASE_NAME}"
 
