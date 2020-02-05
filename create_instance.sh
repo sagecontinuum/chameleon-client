@@ -7,10 +7,7 @@ export IMAGE='CC-Ubuntu18.04-CUDA10'
 export platform_type="x86_64"
 
 # list of possible resource properties to ask for
-export RESOURCE_PROPERTY_x86_64='["=", "$architecture.platform_type", "x86_64"]'
-export RESOURCE_PROPERTY_GPU='["=", "$gpu.gpu", "True"]'
-
-export RESOURCE_PROPERTY=RESOURCE_PROPERTY_GPU
+# '["=", "$architecture.platform_type", "x86_64"]'
 
 
 
@@ -54,7 +51,7 @@ set -e
 
 #create lease
 set -x
-blazar lease-create --physical-reservation min=1,max=1,resource_properties=${RESOURCE_PROPERTY},before_end='' \
+blazar lease-create --physical-reservation min=1,max=1,resource_properties='["=", "$gpu.gpu", "True"]',before_end='' \
   --reservation resource_type=virtual:floatingip,network_id=6189521e-06a0-4c43-b163-16cc11ce675b \
   ${LEASE_NAME}
 set +x
