@@ -87,7 +87,7 @@ set -x
 openstack server create \
 --image ${IMAGE} \
 --flavor baremetal \
---key-name ${KEY_NAME} \
+--key-name "${KEY_NAME}" \
 --nic net-id=${NETWORK_SHAREDNET1} \
 --hint reservation=${RESERVATION_ID} \
 ${INSTANCE_NAME}

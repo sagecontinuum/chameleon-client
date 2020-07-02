@@ -8,7 +8,7 @@ Once you created Chameleon user account and have been added to the SAGE project 
 Upload an existing public key or create a new ssh key pair: Goto [https://chi.uc.chameleoncloud.org/project/key_pairs](https://chi.uc.chameleoncloud.org/project/key_pairs) and click on either "Import Public Key" or "Create Key Pair". You will need the private key to be able to ssh into an instance you created. They default place for a private key is `~/.ssh/id_rsa`. If have more than one ssh key you can also use a more descriptive names such as  `~/.ssh/chameleon.pem` and `~/.ssh/chameleon.pub`.
 
 
-## Build container  (TODO: upload to docker hub)
+## Build container
 
 ```bash
 docker build -t chameleon-client .
@@ -24,5 +24,5 @@ On start of the container your `openrc.sh` will be automatically sourced. Be sur
 ## Start chameleon bare-metal instance
 
 ```bash
-./start_instance.sh
+./create_instance.sh
 ```

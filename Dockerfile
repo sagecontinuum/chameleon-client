@@ -11,7 +11,7 @@ RUN apt-get update &&  apt-get install -y jq
 
 
 RUN pip install --upgrade pip
-RUN pip install python-openstackclient
+RUN pip install python-openstackclient python-heatclient
 
 
 RUN pip install 'python-blazarclient>=1.1.1'
