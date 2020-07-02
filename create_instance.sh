@@ -74,8 +74,29 @@ export RESERVATION_ID=$(blazar lease-show ${LEASE_NAME} -f json | jq -rc '.reser
 echo "RESERVATION_ID: ${RESERVATION_ID}"
 
 
-export KEY_NAME=$( openstack keypair list -f json | jq -r .[].Name )  #works with key only 
-echo "KEY_NAME: ${KEY_NAME}"
+if [ -z ${KEY_NAME+x} ]; then 
+
+
+  export KEY_NAME_COUNT=$( openstack keypair list -f json | jq -r .[].Name | wc -l )
+
+  if [ ${KEY_NAME_COUNT} -eq 0 ] ; then
+    echo "no key found"
+    exit 1
+  fi
+
+  if [ ${KEY_NAME_COUNT} -gt 1 ] ; then
+    export KEY_NAMES=$( openstack keypair list -f json | jq -r .[].Name ) 
+    echo ${KEY_NAMES}
+    echo "more than one key found, please specify key name via enviornment variable KEY_NAME=..."
+    exit 1
+  fi
+
+
+
+  export KEY_NAME=$( openstack keypair list -f json | jq -r .[].Name )  #works with key only 
+  echo "KEY_NAME: ${KEY_NAME}"
+
+fi
 
 # get network
 export NETWORK_SHAREDNET1=$(openstack network list -f json | jq -r  '.[] | select(.Name=="sharednet1" ) | .ID')
