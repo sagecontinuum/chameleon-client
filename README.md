@@ -1,6 +1,12 @@
 # chameleon-client
 
 
+This client script provides an automated way to create a lease and start an instance in Chameleon. New users may want to use the Chameleon website instead. For documentation on how to use Chameleon, please take a look at the [Getting Started](https://chameleoncloud.readthedocs.io/en/latest/getting-started/index.html) documementation.
+
+To be added to the SAGE project in Chameleon, please send an email with your Chameleon username to (email address not decided yet) . 
+
+
+
 ##  OpenStack RC File
 Once you created Chameleon user account and have been added to the SAGE project in Chameleon, download the OpenStack RC File. Go to [https://chi.uc.chameleoncloud.org/project/](https://chi.uc.chameleoncloud.org/project/). Click on your username in the top right corner of the web site and select "OpenStack RC File v3". Save that file somewhere on your machines, for example in your home directory like this: `${HOME}/SAGE_project-openrc.sh`
 
@@ -25,4 +31,10 @@ On start of the container your `openrc.sh` will be automatically sourced. Be sur
 
 ```bash
 ./create_instance.sh
+```
+
+You can change some defaults by setting environment variables, e.g.:
+```bash
+export IMAGE='CC-Ubuntu18.04-CUDA10'
+export KEY_NAME='my_favorite_ssh_key'
 ```

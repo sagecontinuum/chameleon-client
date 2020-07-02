@@ -1,6 +1,10 @@
 #!/bin/bash
 
-export IMAGE='CC-Ubuntu18.04-CUDA10'
+if [ -z ${IMAGE+x} ]; then 
+  export IMAGE='CC-Ubuntu18.04-CUDA10'
+fi
+
+echo "Using image ${IMAGE}..."
 
 
 #export IMAGE='CC-Ubuntu18.04'
