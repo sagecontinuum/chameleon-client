@@ -36,5 +36,5 @@ On start of the container your `openrc.sh` will be automatically sourced. Be sur
 You can change some defaults by setting environment variables, e.g.:
 ```bash
 export IMAGE='CC-Ubuntu18.04-CUDA10'
-export KEY_NAME='my_favorite_ssh_key'
+export KEY_NAME='my_favorite_ssh_key'  # e.g. if you have more than one key in Chameleon
 ```
