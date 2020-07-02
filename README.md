@@ -1,7 +1,7 @@
 # chameleon-client
 
 
-This client script provides an automated way to create a lease and start an instance in Chameleon. New users may want to use the Chameleon website instead. For documentation on how to use Chameleon, please take a look at the [Getting Started](https://chameleoncloud.readthedocs.io/en/latest/getting-started/index.html) documementation.
+This client script provides an automated way to create a lease and start an instance in Chameleon. New users may want to use the Chameleon website instead for this. For documentation on how to use Chameleon, please take a look at the [Getting Started](https://chameleoncloud.readthedocs.io/en/latest/getting-started/index.html) documentation.
 
 To be added to the SAGE project in Chameleon, please send an email with your Chameleon username to (email address not decided yet) . 
 
