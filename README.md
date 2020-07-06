@@ -33,6 +33,17 @@ On start of the container your `openrc.sh` will be automatically sourced. Be sur
 ./create_instance.sh
 ```
 
+By default the leasing lasts within a day. If longer leasing day is needed,
+```bash
+./create_instance.sh -h
+ Lease a Chameleon node
+ USAGE: create_instance.sh [OPTIONS]
+    [OPTIONS]
+    -help         Print help
+    -days         Number of days to lease
+./create_instance.sh -days 7
+```
+
 You can change some defaults by setting environment variables, e.g.:
 ```bash
 export IMAGE='CC-Ubuntu18.04-CUDA10'
