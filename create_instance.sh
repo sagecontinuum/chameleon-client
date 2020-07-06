@@ -12,7 +12,7 @@ while [[ $# -gt 0 ]]
 do
   key="$1"
   case $key in
-    -h)
+    -help)
     help
     exit 0
     ;;

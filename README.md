@@ -35,7 +35,7 @@ On start of the container your `openrc.sh` will be automatically sourced. Be sur
 
 By default the leasing lasts within a day. If longer leasing day is needed,
 ```bash
-./create_instance.sh -h
+./create_instance.sh -help
  Lease a Chameleon node
  USAGE: create_instance.sh [OPTIONS]
     [OPTIONS]
