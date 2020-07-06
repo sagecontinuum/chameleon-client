@@ -1,6 +1,39 @@
 #!/bin/bash
 
-if [ -z ${IMAGE+x} ]; then 
+help() {
+  echo " Lease a Chameleon node"
+  echo " USAGE: create_instance.sh [OPTIONS]"
+  echo "    [OPTIONS]"
+  echo "    -help         Print help"
+  echo "    -days         Number of days to lease"
+}
+
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+  case $key in
+    -h)
+    help
+    exit 0
+    ;;
+    -days)
+    re='^[0-9]+$'
+    if ! [[ $2 =~ $re ]]; then
+      echo "-days $2 option must be a number"
+      exit 1
+    fi
+    LEASE_DAYS="$2"
+    shift
+    shift
+    ;;
+    *)
+    shift
+    ;;
+  esac
+done
+
+
+if [ -z ${IMAGE+x} ]; then
   export IMAGE='CC-Ubuntu18.04-CUDA10'
 fi
 
@@ -24,6 +57,25 @@ if [[ -z "${OS_USERNAME}" ]] ; then
 fi
 
 
+# detect the key for this lease
+if [ -z ${KEY_NAME+x} ]; then
+  export KEY_NAME_COUNT=$( openstack keypair list -f json | jq -r .[].Name | wc -l )
+
+  if [ ${KEY_NAME_COUNT} -eq 0 ] ; then
+    echo "no key found, please register your key on Chameleon first"
+    exit 1
+  fi
+
+  if [ ${KEY_NAME_COUNT} -gt 1 ] ; then
+    export KEY_NAMES=$( openstack keypair list -f json | jq -r .[].Name )
+    echo ${KEY_NAMES}
+    echo "more than one key found, please specify key name via enviornment variable KEY_NAME=..."
+    exit 1
+  fi
+
+  export KEY_NAME=$( openstack keypair list -f json | jq -r .[].Name )  #works with key only
+  echo "KEY_NAME: ${KEY_NAME}"
+fi
 
 
 # try to detect available lease name
@@ -33,7 +85,7 @@ LEASE_LIST=$(blazar lease-list -f json | jq -r '.[].name')
 LEASE_NAME=""
 
 
-for i in {1..100} ; do 
+for i in {1..100} ; do
   TRY_NAME="${OS_USERNAME}_${i}"
   #echo "trying ${TRY_NAME}"
   for LEASE_X in ${LEASE_LIST} ; do
@@ -50,6 +102,16 @@ done
 
 echo "LEASE_NAME: ${LEASE_NAME}"
 
+# set start and end date of the lease if LEASE_DAYS is set
+if [ -z ${LEASE_DAYS+x} ]; then
+  echo "leasing ${LEASE_NAME} for a day. To lease longer see -help"
+  export START_DATE=$(date -u +"%Y-%m-%d %H:%M")
+  export END_DATE=$(date -u +"%Y-%m-%d %H:%M" -d "$(date)+1 days")
+else
+  export START_DATE=$(date -u +"%Y-%m-%d %H:%M")
+  export END_DATE=$(date -u +"%Y-%m-%d %H:%M" -d "$(date)+${LEASE_DAYS} days")
+fi
+
 set -e
 
 
@@ -57,6 +119,8 @@ set -e
 set -x
 blazar lease-create --physical-reservation min=1,max=1,resource_properties='["=", "$gpu.gpu", "True"]',before_end='' \
   --reservation resource_type=virtual:floatingip,network_id=6189521e-06a0-4c43-b163-16cc11ce675b \
+  --start-date "${START_DATE}" \
+  --end-date "${END_DATE}" \
   ${LEASE_NAME}
 set +x
 
@@ -69,7 +133,7 @@ while [ $(blazar lease-show ${LEASE_NAME} -f json | jq -r '.status') != "ACTIVE"
 done
 echo "Lease ${LEASE_NAME} is active."
 
-export INSTANCE_NAME=${LEASE_NAME} 
+export INSTANCE_NAME=${LEASE_NAME}
 
 
 ### collect information
@@ -77,30 +141,6 @@ export INSTANCE_NAME=${LEASE_NAME}
 export RESERVATION_ID=$(blazar lease-show ${LEASE_NAME} -f json | jq -rc '.reservations' | jq -c '.'  | grep physical:host | jq -r .id)
 echo "RESERVATION_ID: ${RESERVATION_ID}"
 
-
-if [ -z ${KEY_NAME+x} ]; then 
-
-
-  export KEY_NAME_COUNT=$( openstack keypair list -f json | jq -r .[].Name | wc -l )
-
-  if [ ${KEY_NAME_COUNT} -eq 0 ] ; then
-    echo "no key found"
-    exit 1
-  fi
-
-  if [ ${KEY_NAME_COUNT} -gt 1 ] ; then
-    export KEY_NAMES=$( openstack keypair list -f json | jq -r .[].Name ) 
-    echo ${KEY_NAMES}
-    echo "more than one key found, please specify key name via enviornment variable KEY_NAME=..."
-    exit 1
-  fi
-
-
-
-  export KEY_NAME=$( openstack keypair list -f json | jq -r .[].Name )  #works with key only 
-  echo "KEY_NAME: ${KEY_NAME}"
-
-fi
 
 # get network
 export NETWORK_SHAREDNET1=$(openstack network list -f json | jq -r  '.[] | select(.Name=="sharednet1" ) | .ID')
